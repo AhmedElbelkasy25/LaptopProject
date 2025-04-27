@@ -8,11 +8,11 @@ namespace DataAccess.Repositories.IRepositories
 {
     public interface IUnitOfWork : IDisposable
     {
-        IApplicationUserRepository ApplicationUser { get; }
-        ICategoryRepository Category { get; }
-        IProductRepository Product { get; }
-        IProductImagesRepository ProductImages { get; }
-        IContactUsRepository ContactUs { get; }
+        IApplicationUserRepository ApplicationUserRepository { get; }
+        IBrandRepository BrandRepository { get; }
+        IProductRepository ProductRepository { get; }
+        IProductImagesRepository ProductImagesRepository { get; }
+        IContactUsRepository ContactUsRepository { get; }
 
 
 

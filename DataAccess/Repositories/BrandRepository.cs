@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repositories
 {
-    public class CategoryRepository : Repository<Category>, ICategoryRepository
+    public class BrandRepository : Repository<Brand>, IBrandRepository
     {
-        public CategoryRepository(ApplicationDbContext dbContext) : base(dbContext)
+        public BrandRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
         }
     }

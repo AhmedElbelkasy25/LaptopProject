@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Repositories.IRepositories
 {
-    public interface ICategoryRepository : IRepository<Category>
+    public interface IBrandRepository : IRepository<Brand>
     {
         
     }

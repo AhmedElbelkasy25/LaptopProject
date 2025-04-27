@@ -8,12 +8,23 @@ namespace LaptopProject
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            
             // Add services to the container.
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
+
+            //add Cors
+            builder.Services.AddCors(options =>
+            { options.AddPolicy("MyAllowSpecifications",
+                    policy =>
+                    {
+                        policy.AllowAnyOrigin()
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
+                    });
+            });
 
             // Add DbContext
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -35,6 +46,9 @@ namespace LaptopProject
             }
 
             app.UseHttpsRedirection();
+
+            //Add my cors
+            app.UseCors("MyAllowSpecifications");
 
             app.UseAuthorization();
             

@@ -12,17 +12,17 @@ namespace DataAccess.Repositories
         public UnitOfWork(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
-            ApplicationUser = new ApplicationUserRepository(_dbContext);
-            Category = new CategoryRepository(_dbContext);
-            Product = new ProductRepository(_dbContext);
-            ProductImages = new ProductImagesRepository(_dbContext);
-            ContactUs = new ContactUsRepository(_dbContext);
+            ApplicationUserRepository = new ApplicationUserRepository(_dbContext);
+            BrandRepository = new BrandRepository(_dbContext);
+            ProductRepository = new ProductRepository(_dbContext);
+            ProductImagesRepository = new ProductImagesRepository(_dbContext);
+            ContactUsRepository = new ContactUsRepository(_dbContext);
         }
-        public IApplicationUserRepository ApplicationUser { get; }
-        public ICategoryRepository Category { get; }
-        public IProductRepository Product { get; }
-        public IProductImagesRepository ProductImages { get; }
-        public IContactUsRepository ContactUs { get; }
+        public IApplicationUserRepository ApplicationUserRepository { get; }
+        public IBrandRepository BrandRepository { get; }
+        public IProductRepository ProductRepository { get; }
+        public IProductImagesRepository ProductImagesRepository { get; }
+        public IContactUsRepository ContactUsRepository { get; }
         public void Commit()
         {
             _dbContext.SaveChanges();
