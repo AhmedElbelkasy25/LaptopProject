@@ -16,7 +16,7 @@ namespace DataAccess.Repositories.IRepositories
 
 
 
-        void Commit();
+        Task CommitAsync();
     }
     
 }

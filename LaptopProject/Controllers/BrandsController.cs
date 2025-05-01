@@ -36,7 +36,7 @@ namespace LaptopProject.Controllers
         {
             Models.Brand brand = brandd.Adapt<Models.Brand>();
             _unitOfWork.BrandRepository.Create(brand);
-            _unitOfWork.Commit();
+            _unitOfWork.CommitAsync();
             return Created($"{Request.Scheme}://{Request.Host}/api/Brand/id" , brand.Adapt<ResponseBrandDTO>());
         }
         [HttpPut("{id}")]
@@ -47,7 +47,7 @@ namespace LaptopProject.Controllers
             brandd.Id=brandDB.Id;
             brandDB = brandd.Adapt<Brand>();
             _unitOfWork.BrandRepository.Alter(brandDB);
-            _unitOfWork.Commit();
+            _unitOfWork.CommitAsync();
             return Ok();
         }
         [HttpDelete("{id}")]
@@ -56,7 +56,7 @@ namespace LaptopProject.Controllers
             var brandDB = _unitOfWork.BrandRepository.GetOne(e => e.Id == id);
             if (brandDB == null) return NotFound();
             _unitOfWork.BrandRepository.Delete(brandDB);
-            _unitOfWork.Commit();
+            _unitOfWork.CommitAsync();
             return NoContent();
         }
     }

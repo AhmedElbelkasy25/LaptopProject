@@ -21,9 +21,9 @@ namespace DataAccess.Repositories
             _dbSet = _dbContext.Set<T>();
         }
 
-        public void Create(T entity)
+        public async Task CreateAsync(T entity)
         {
-            _dbSet.Add(entity);
+            await _dbSet.AddAsync(entity);
 
         }
 

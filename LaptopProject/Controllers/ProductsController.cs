@@ -39,7 +39,7 @@ namespace LaptopProject.Controllers
             
             Product product = prod.Adapt<Product>();
             _unitOfWork.ProductRepository.Create(product);
-            _unitOfWork.Commit();
+            _unitOfWork.CommitAsync();
             return Created($"{Request.Scheme}://{Request.Host}/api/Product/{product.Id}", product.Adapt<ProductReqDTO>());
         }
 
