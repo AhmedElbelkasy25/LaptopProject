@@ -32,31 +32,31 @@ namespace LaptopProject.Controllers
         }
 
         [HttpPost("")]
-        public IActionResult CreateBrand([FromBody] RequestBrandDTO brandd)
+        public async Task<IActionResult> CreateBrandAsync([FromBody] RequestBrandDTO brandd)
         {
             Models.Brand brand = brandd.Adapt<Models.Brand>();
-            _unitOfWork.BrandRepository.Create(brand);
-            _unitOfWork.CommitAsync();
+            await _unitOfWork.BrandRepository.CreateAsync(brand);
+            await _unitOfWork.CommitAsync();
             return Created($"{Request.Scheme}://{Request.Host}/api/Brand/id" , brand.Adapt<ResponseBrandDTO>());
         }
         [HttpPut("{id}")]
-        public IActionResult UpdateBrand([FromRoute] int id, [FromBody] RequestBrandDTO brandd)
+        public async Task<IActionResult> UpdateBrandAsync([FromRoute] int id, [FromBody] RequestBrandDTO brandd)
         {
             var brandDB = _unitOfWork.BrandRepository.GetOne(e => e.Id == id , tracked:false);
             if (brandDB == null) return NotFound();
             brandd.Id=brandDB.Id;
             brandDB = brandd.Adapt<Brand>();
             _unitOfWork.BrandRepository.Alter(brandDB);
-            _unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync();
             return Ok();
         }
         [HttpDelete("{id}")]
-        public IActionResult DeleteBrand([FromRoute]int id)
+        public async Task<IActionResult> DeleteBrandAsync([FromRoute]int id)
         {
             var brandDB = _unitOfWork.BrandRepository.GetOne(e => e.Id == id);
             if (brandDB == null) return NotFound();
             _unitOfWork.BrandRepository.Delete(brandDB);
-            _unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync();
             return NoContent();
         }
     }
