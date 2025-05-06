@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Scalar.AspNetCore;
+using DataAccess.DbIntializer;
 namespace LaptopProject
 {
     public class Program
@@ -35,8 +36,17 @@ namespace LaptopProject
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            //DbIntializer
+            builder.Services.AddScoped<IDbIntializer, DbIntializer>();
+
+
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             var app = builder.Build();
+
+            //run DbIntializer
+            var scope = app.Services.CreateScope();
+            var service = scope.ServiceProvider.GetService<IDbIntializer>();
+            service?.Intialize();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

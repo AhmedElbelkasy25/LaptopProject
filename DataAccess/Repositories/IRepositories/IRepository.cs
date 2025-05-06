@@ -10,7 +10,7 @@ namespace DataAccess.Repositories.IRepositories
 {
     public interface IRepository<T> where T : class
     {
-        Task CreateAsync(T entity);
+        Task<T> CreateAsync(T entity , CancellationToken cancellationToken);
         void Alter(T entity);
         void Delete(T entity);
         //void Commit();

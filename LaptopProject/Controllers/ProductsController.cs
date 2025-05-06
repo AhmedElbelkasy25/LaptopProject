@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ namespace LaptopProject.Controllers
         {
             this._unitOfWork = unitOfWork;
         }
-
+        [Authorize]
         [HttpGet("")]
         public IActionResult GetAll([FromQuery] int PageNum = 1, [FromQuery] int pagesize = 30)
         {
@@ -36,10 +37,10 @@ namespace LaptopProject.Controllers
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> CreateProduct([FromForm] ProductReqDTO prod)
+        public async Task<IActionResult> CreateProduct([FromForm] ProductReqDTO prod , CancellationToken cancellationToken)
         {
             List<string> newFiles = new List<string>();
-            if (prod.Files.Any())
+            if (prod.Files!=null &&  prod.Files.Any())
             {
                 foreach (var file in prod.Files)
                 {
@@ -56,8 +57,8 @@ namespace LaptopProject.Controllers
                 }
             }
             Product product = prod.Adapt<Product>();
-            await _unitOfWork.ProductRepository.CreateAsync(product);
-            await _unitOfWork.CommitAsync();
+            var CreatedProd =await _unitOfWork.ProductRepository.CreateAsync(product , cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
             if (newFiles.Count > 0)
             {
                 foreach (var file in newFiles)
@@ -66,19 +67,20 @@ namespace LaptopProject.Controllers
                     {
                         ImageUrl = file,
                         ProductId = product.Id
-                    });
+                    } , cancellationToken);
                 }
-                await _unitOfWork.CommitAsync();
+                await _unitOfWork.CommitAsync(cancellationToken);
             }
-            return Created($"{Request.Scheme}://{Request.Host}/api/Product/{product.Id}", product.Adapt<ProductReqDTO>());
+            return Created($"{Request.Scheme}://{Request.Host}/api/Product/{product.Id}", CreatedProd.Adapt<ProductReqDTO>());
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditProduct([FromRoute] int id, [FromForm] ProductReqDTO prod)
+        public async Task<IActionResult> EditProduct([FromRoute] int id, [FromForm] ProductReqDTO prod , CancellationToken cancellationToken)
         {
             var productDB = _unitOfWork.ProductRepository.GetOne(e => e.Id == id, tracked: false);
+            if (productDB == null) return NotFound();
             prod.Id = productDB.Id;
             List<string> newFiles = new List<string>();
-            if (prod.Files.Any())
+            if ( prod.Files != null &&prod.Files.Any())
             {
                 List<ProductImages> prodImgDB = _unitOfWork.ProductImagesRepository.Get(e => e.ProductId == id).ToList();
                 foreach (var file in prod.Files)
@@ -89,7 +91,7 @@ namespace LaptopProject.Controllers
                         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "images", fileName);
                         using (var stream = System.IO.File.Create(filePath))
                         {
-                            file.CopyTo(stream);
+                            await file.CopyToAsync(stream , cancellationToken);
                         }
                         newFiles.Add(fileName);
                     }
@@ -110,24 +112,25 @@ namespace LaptopProject.Controllers
                     {
                         ImageUrl = file,
                         ProductId = productDB.Id
-                    });
+                    }, cancellationToken);
                 }
-                await _unitOfWork.CommitAsync();
+                await _unitOfWork.CommitAsync(cancellationToken);
 
             }
 
             Product product = prod.Adapt<Product>();
             _unitOfWork.ProductRepository.Alter(product);
-            await _unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync(cancellationToken);
             return NoContent();
 
         }
 
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync( [FromRoute] int id)
+        public async Task<IActionResult> DeleteAsync( [FromRoute] int id, CancellationToken cancellationToken)
         {
             var prod = _unitOfWork.ProductRepository.GetOne(e => e.Id == id);
+            if (prod == null) return NotFound();
             var imgs = _unitOfWork.ProductImagesRepository.Get(e => e.ProductId == id).ToList();
             _unitOfWork.ProductRepository.Delete(prod);
             if (imgs.Count > 0)
@@ -140,7 +143,7 @@ namespace LaptopProject.Controllers
                     _unitOfWork.ProductImagesRepository.Delete(img);
                 }
             }
-            await _unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync(cancellationToken);
             return NoContent();
         }
 

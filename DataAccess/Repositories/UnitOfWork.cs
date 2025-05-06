@@ -23,10 +23,13 @@ namespace DataAccess.Repositories
         public IProductRepository ProductRepository { get; }
         public IProductImagesRepository ProductImagesRepository { get; }
         public IContactUsRepository ContactUsRepository { get; }
-        public async Task CommitAsync()
+        public async Task CommitAsync(CancellationToken cancellationToken)
         {
-            await _dbContext.SaveChangesAsync();
+            
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            
         }
+
         public void Dispose()
         {
              _dbContext.Dispose();

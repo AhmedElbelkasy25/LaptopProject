@@ -14,5 +14,7 @@ namespace Models
         public string Message { get; set; } = string.Empty;
         public string Subject { get; set; } = string.Empty;
         public bool Status { get; set; } = false;
+        public ApplicationUser User { get; set; }
+        public string ApplicationUserId { get; set; }
     }
 }

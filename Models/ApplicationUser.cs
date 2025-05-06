@@ -9,5 +9,7 @@ namespace Models
 {
     public class ApplicationUser: IdentityUser
     {
+        public string Name { get; set; } = string.Empty;
+        public ICollection<ContactUs> Contacts { get; set; } = new List<ContactUs>();
     }
 }

@@ -21,10 +21,10 @@ namespace DataAccess.Repositories
             _dbSet = _dbContext.Set<T>();
         }
 
-        public async Task CreateAsync(T entity)
+        public async Task<T> CreateAsync(T entity , CancellationToken cancellationToken)
         {
-            await _dbSet.AddAsync(entity);
-
+            await _dbSet.AddAsync(entity , cancellationToken);
+            return entity;
         }
 
         public void Alter(T entity)

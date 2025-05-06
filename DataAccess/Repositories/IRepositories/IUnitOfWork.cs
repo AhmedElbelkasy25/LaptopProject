@@ -16,7 +16,7 @@ namespace DataAccess.Repositories.IRepositories
 
 
 
-        Task CommitAsync();
+        Task CommitAsync(CancellationToken cancellationToken);
     }
     
 }
