@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Scalar.AspNetCore;
 using DataAccess.DbIntializer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 namespace LaptopProject
 {
     public class Program
@@ -41,6 +44,29 @@ namespace LaptopProject
 
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            //JWT Configuration
+            builder.Services.AddAuthentication( options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                
+            })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = "https://localhost:7213",
+            ValidAudience = "https://localhost:4200",
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Guendouzie29Guendouzie29Guendouzie29"))
+        };
+    });
+
+
             var app = builder.Build();
 
             //run DbIntializer

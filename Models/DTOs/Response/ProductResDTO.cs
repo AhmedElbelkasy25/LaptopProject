@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.DTOs
+namespace Models.DTOs.Response
 {
-    public class ProductReqDTO
+    public class ProductResDTO
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -16,7 +15,5 @@ namespace Models.DTOs
         public string Description { get; set; } = string.Empty;
         public string Model { get; set; } = string.Empty;
         public int BrandId { get; set; }
-
-        public List<IFormFile>? Files { get; set; }
     }
 }

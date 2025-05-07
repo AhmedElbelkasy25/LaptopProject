@@ -1,7 +1,8 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Models.DTOs;
+using Models.DTOs.Request;
+using Models.DTOs.Response;
 using System.Threading;
 
 namespace LaptopProject.Controllers

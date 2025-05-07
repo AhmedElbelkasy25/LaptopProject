@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing.Constraints;
-using Models.DTOs;
+
 using System.Threading.Tasks;
 
 namespace LaptopProject.Controllers
@@ -24,38 +24,41 @@ namespace LaptopProject.Controllers
         public IActionResult GetAll([FromQuery] int PageNum = 1, [FromQuery] int pagesize = 30)
         {
             var products = _unitOfWork.ProductRepository.Get().Skip((PageNum - 1) * pagesize).Take(pagesize).ToList();
-            return Ok(products.Adapt<List<ProductReqDTO>>());
+            return Ok(products.Adapt<List<ProductResDTO>>());
         }
-
+        [Authorize]
         [HttpGet("{id}")]
         public IActionResult GetOneProduct([FromRoute] int id)
         {
             var prod = _unitOfWork.ProductRepository.GetOne(e => e.Id == id);
             if (prod == null)
                 return NotFound();
-            return Ok(prod.Adapt<ProductReqDTO>());
+            return Ok(prod.Adapt<ProductResDTO>());
         }
-
+        [Authorize(Roles ="Admin")]
         [HttpPost("")]
-        public async Task<IActionResult> CreateProduct([FromForm] ProductReqDTO prod , CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateProductAsync([FromForm] ProductReqDTO prod , CancellationToken cancellationToken)
         {
             List<string> newFiles = new List<string>();
             if (prod.Files!=null &&  prod.Files.Any())
             {
                 foreach (var file in prod.Files)
                 {
+                    // to cancel the request if CancelationToken was true
+                    cancellationToken.ThrowIfCancellationRequested();
                     if (file != null && file.Length > 0)
                     {
                         var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "images", fileName);
                         using (var stream = System.IO.File.Create(filePath))
                         {
-                            file.CopyTo(stream);
+                            await file.CopyToAsync(stream , cancellationToken);
                         }
                         newFiles.Add(fileName);
                     }
                 }
             }
+            cancellationToken.ThrowIfCancellationRequested();
             Product product = prod.Adapt<Product>();
             var CreatedProd =await _unitOfWork.ProductRepository.CreateAsync(product , cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
@@ -71,10 +74,12 @@ namespace LaptopProject.Controllers
                 }
                 await _unitOfWork.CommitAsync(cancellationToken);
             }
-            return Created($"{Request.Scheme}://{Request.Host}/api/Product/{product.Id}", CreatedProd.Adapt<ProductReqDTO>());
+            return Created($"{Request.Scheme}://{Request.Host}/api/Product/{product.Id}", CreatedProd.Adapt<ProductResDTO>());
         }
+        [Authorize(Roles = "Admin")]
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditProduct([FromRoute] int id, [FromForm] ProductReqDTO prod , CancellationToken cancellationToken)
+        public async Task<IActionResult> EditProductAsync([FromRoute] int id, [FromForm] ProductReqDTO prod , CancellationToken cancellationToken)
         {
             var productDB = _unitOfWork.ProductRepository.GetOne(e => e.Id == id, tracked: false);
             if (productDB == null) return NotFound();
@@ -83,12 +88,14 @@ namespace LaptopProject.Controllers
             if ( prod.Files != null &&prod.Files.Any())
             {
                 List<ProductImages> prodImgDB = _unitOfWork.ProductImagesRepository.Get(e => e.ProductId == id).ToList();
+
                 foreach (var file in prod.Files)
                 {
                     if (file != null && file.Length > 0)
                     {
                         var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "images", fileName);
+                        cancellationToken.ThrowIfCancellationRequested();
                         using (var stream = System.IO.File.Create(filePath))
                         {
                             await file.CopyToAsync(stream , cancellationToken);
@@ -125,6 +132,7 @@ namespace LaptopProject.Controllers
 
         }
 
+        [Authorize(Roles = "Admin")]
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync( [FromRoute] int id, CancellationToken cancellationToken)
