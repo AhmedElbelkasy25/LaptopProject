@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{DB872038-F9E4-4BB5-A890-81C84AFAC07C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{31FF909C-88D9-4472-89BA-87A3BB5F2A60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{DB872038-F9E4-4BB5-A890-81C84AFAC07C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB872038-F9E4-4BB5-A890-81C84AFAC07C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB872038-F9E4-4BB5-A890-81C84AFAC07C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31FF909C-88D9-4472-89BA-87A3BB5F2A60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31FF909C-88D9-4472-89BA-87A3BB5F2A60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31FF909C-88D9-4472-89BA-87A3BB5F2A60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31FF909C-88D9-4472-89BA-87A3BB5F2A60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,6 +5,7 @@ using DataAccess.DbIntializer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Stripe;
 namespace LaptopProject
 {
     public class Program
@@ -42,6 +43,7 @@ namespace LaptopProject
             //DbIntializer
             builder.Services.AddScoped<IDbIntializer, DbIntializer>();
 
+            
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -52,19 +54,24 @@ namespace LaptopProject
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 
             })
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = "https://localhost:7213",
-            ValidAudience = "https://localhost:4200",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Guendouzie29Guendouzie29Guendouzie29"))
-        };
-    });
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "https://localhost:7213",
+                    ValidAudience = "https://localhost:4200",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Guendouzie29Guendouzie29Guendouzie29"))
+                };
+            });
+
+            // stripe Configuration
+
+            builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+            StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
 
             var app = builder.Build();

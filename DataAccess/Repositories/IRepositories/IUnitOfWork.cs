@@ -13,6 +13,7 @@ namespace DataAccess.Repositories.IRepositories
         IProductRepository ProductRepository { get; }
         IProductImagesRepository ProductImagesRepository { get; }
         IContactUsRepository ContactUsRepository { get; }
+        ICartRepository CartRepository { get; }
 
 
 

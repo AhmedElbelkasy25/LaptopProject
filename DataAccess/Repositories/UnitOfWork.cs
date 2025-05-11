@@ -17,12 +17,14 @@ namespace DataAccess.Repositories
             ProductRepository = new ProductRepository(_dbContext);
             ProductImagesRepository = new ProductImagesRepository(_dbContext);
             ContactUsRepository = new ContactUsRepository(_dbContext);
+            CartRepository = new CartRepository(_dbContext);
         }
         public IApplicationUserRepository ApplicationUserRepository { get; }
         public IBrandRepository BrandRepository { get; }
         public IProductRepository ProductRepository { get; }
         public IProductImagesRepository ProductImagesRepository { get; }
         public IContactUsRepository ContactUsRepository { get; }
+        public ICartRepository CartRepository { get; }
         public async Task CommitAsync(CancellationToken cancellationToken)
         {
             

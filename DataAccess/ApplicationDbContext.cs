@@ -17,11 +17,12 @@ namespace DataAccess
 
        
 
-        DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        DbSet<Brand> Brands { get; set; }
-        DbSet<Product> Products { get; set; }
-        DbSet<ProductImages> ProductImages { get; set; }
-        DbSet<ContactUs> ContactUs { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<Brand> Brands { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductImages> ProductImages { get; set; }
+        public DbSet<ContactUs> ContactUs { get; set; }
+        public DbSet<Cart> Carts { get; set; }
 
 
        
