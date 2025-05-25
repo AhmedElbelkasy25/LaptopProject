@@ -72,7 +72,11 @@ namespace LaptopProject
 
             builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
             StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
-
+            // add Bearer Token in Scalar
+            builder.Services.AddOpenApi(options =>
+            {
+                options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+            });
 
             var app = builder.Build();
 
@@ -85,6 +89,7 @@ namespace LaptopProject
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+                
                 app.MapScalarApiReference();
             }
 

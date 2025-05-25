@@ -74,7 +74,7 @@ namespace LaptopProject.Controllers
                 }
                 await _unitOfWork.CommitAsync(cancellationToken);
             }
-            return Created($"{Request.Scheme}://{Request.Host}/api/Product/{product.Id}", CreatedProd.Adapt<ProductResDTO>());
+            return Created($"{Request.Scheme}://{Request.Host}/api/Products/{product.Id}", CreatedProd.Adapt<ProductResDTO>());
         }
         [Authorize(Roles = "Admin")]
 
