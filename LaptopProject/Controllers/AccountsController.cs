@@ -20,14 +20,17 @@ namespace LaptopProject.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IConfiguration _config;
 
         public AccountsController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager , 
+            IConfiguration config)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _config = config;
         }
 
 
@@ -69,11 +72,11 @@ namespace LaptopProject.Controllers
                     claims.Add(new Claim(ClaimTypes.Role, role));
                 }
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Guendouzie29Guendouzie29Guendouzie29"));
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                 var token = new JwtSecurityToken(
-                    issuer: "https://localhost:7213",
-                    audience: "https://localhost:4200",
+                    issuer: _config["Jwt:Issuer"],
+                    audience: _config["Jwt:Audience"],
                     claims: claims,
                     expires: DateTime.Now.AddHours(3),
                     signingCredentials: creds
@@ -125,12 +128,12 @@ namespace LaptopProject.Controllers
                         claims.Add(new Claim(ClaimTypes.Role,role));
                     }
 
-                    SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Guendouzie29Guendouzie29Guendouzie29"));
+                    SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
 
                     SigningCredentials signingCredentials = new SigningCredentials(key , SecurityAlgorithms.HmacSha256);
                     JwtSecurityToken token = new(
-                        issuer: "https://localhost:7213",
-                        audience: "https://localhost:4200",
+                        issuer: _config["Jwt:Issuer"],
+                        audience: _config["Jwt:Audience"],
                         claims : claims,
                         expires:DateTime.Now.AddHours(3),
                         signingCredentials: signingCredentials
